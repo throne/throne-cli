@@ -21,23 +21,6 @@ RIPESTAT_URL = 'https://stat.ripe.net/data'
 # Set python check interval to 0, hopefully to improve performance
 sys.setcheckinterval(0)
 
-class _JSONRequest():
-    # This class is used to get JSON data from a specified URL.
-    def __init__(self):
-        self.http = urllib3.PoolManager()
-    # This function is what actually gets the URL data.
-    def get_json(self, url=None):
-        conn = self.http.request('GET', url)
-        data = conn.data
-        # Only return JSON data if we get a HTTP Status Code: 200 OK
-        if conn.status == 200:
-            log.debug(f"Received HTTP/200 from {url}, loading JSON data...")
-            d = json.loads(data.decode('utf-8', 'ignore'))
-            return d
-        else:
-            # Raise an HTTP error if response isn't 200 OK
-            log.debug(f"Received HTTP/{conn.status} from {url}...raising exception")
-            raise ThroneHTTPError(f"{conn.status}\n{url}")
 ####################THIS LINE SEPERATES RDAP PARSERS FROM OTHER ASN PARSERS####################
 class _RDAPASCommon:
     # This class is used to parse common data between AS number entities (see vars)

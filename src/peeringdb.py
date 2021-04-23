@@ -6,8 +6,8 @@ import logging
 import click
 from requests import request
 # Import Throne Modules
+from src.parsers import json_request
 from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
-from src.parsers import asn_parser
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ def asn(as_number):
     Retrieves information about an organization by AS#.
     """
     url = "{0}{1}".format(PDB_ORG_ASN, as_number)
-    response = asn_parser._JSONRequest().get_json(url=url)
+    response = json_request._JSONRequest().get_json(url=url)
     json = response
     if json['data'] == []:
         raise ThroneHTTPError(f"PeeringDB returned a blank result. Please check your query and try again. If the issue persists, manually query PeeringDB to see if the entry exists.\nJSON Returned: {json}")
@@ -53,7 +53,7 @@ def ix(ix, unformatted, count):
     Returns IX search output from PeeringDB.
     """
     url = "{0}{1}&limit={2}".format(PDB_IX_NAME, ix, count)
-    response = asn_parser._JSONRequest().get_json(url=url)
+    response = json_request._JSONRequest().get_json(url=url)
     json = response
     if json['data'] == []:
         raise ThroneHTTPError(f"PeeringDB returned a blank result. Please check your query and try again. If the issue persists, manually query PeeringDB to see if the entry exists.\nJSON Returned: {json}")

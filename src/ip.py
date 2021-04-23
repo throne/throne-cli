@@ -6,6 +6,7 @@ import logging
 import click
 from requests import request
 # Import Throne Modules
+from src.parsers import json_request
 from src.parsers import ip_parser
 from src.bgp import asn as get_asn
 from src.bgp import raw as get_asn_raw
@@ -33,7 +34,7 @@ def raw(address):
     This raw output does NOT contain BGP related information.
     """
     url = '{0}/ip/{1}'.format(BOOTSTRAP_URL, address)
-    response = ip_parser._JSONRequest().get_json(url=url)
+    response = json_request._JSONRequest().get_json(url=url)
     json = response
     parse_json = ip_parser._RDAPIPEntity(json)
     parse_json.parse()
@@ -83,13 +84,13 @@ def info(ctx, ipaddress, all):
     ripe_url = '{0}{1}'.format(RIPEPREFIXOVER_URL, ipaddress)
     # Parse Responses
     ## Bootstrap Response
-    response_bootstrap = ip_parser._JSONRequest().get_json(url=bootstrap_url)
+    response_bootstrap = json_request._JSONRequest().get_json(url=bootstrap_url)
     bootstrap_json = response_bootstrap
     parse_bootstrap_json = ip_parser._RDAPIPEntity(bootstrap_json)
     parse_bootstrap_json.parse()
     bootstrap_results = parse_bootstrap_json.vars
     ## RIPE Response
-    ripe_response = ip_parser._JSONRequest().get_json(url=ripe_url)
+    ripe_response = json_request._JSONRequest().get_json(url=ripe_url)
     ripe_json = ripe_response
     parse_ripe_json = ip_parser._RIPEPrefixOverview(ripe_json)
     parse_ripe_json.parse()

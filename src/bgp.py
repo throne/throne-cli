@@ -7,6 +7,7 @@ import logging
 import sys
 from requests import request
 # Import Throne Modules
+from src.parsers import json_request
 from src.parsers import asn_parser
 from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
 
@@ -30,7 +31,7 @@ def raw(as_number):
     Get raw JSON output from asn_parser.py
     """
     url = '{0}/autnum/{1}'.format(BOOTSTRAP_URL, as_number)
-    response = asn_parser._JSONRequest().get_json(url=url)
+    response = json_request._JSONRequest().get_json(url=url)
     json = response
     parse_json = asn_parser._RDAPASEntity(json)
     parse_json.parse()
@@ -45,7 +46,7 @@ def test(as_number):
     """
     # Get AS Number JSON via src/parser/asn_parser.py
     url = '{0}/autnum/{1}'.format(BOOTSTRAP_URL, as_number)
-    response = asn_parser._JSONRequest().get_json(url=url)
+    response = json_request._JSONRequest().get_json(url=url)
     json = response
     # Parse JSON response using the asn_parser parser
     parse_json = asn_parser._RDAPASEntity(json)
@@ -70,7 +71,7 @@ def asn(as_number):
     """
     # Get Info from RIPEStat
     url = '{0}{1}'.format(RIPESTAT_ASOverview, as_number)
-    response = asn_parser._JSONRequest().get_json(url=url)
+    response = json_request._JSONRequest().get_json(url=url)
     # Take RIPEStat JSON response and put it as the JSON variable
     json = response
     asn = json['data']['resource']
@@ -85,7 +86,7 @@ def asn(as_number):
     click.echo(f"AS Block: {as_block}\nName: {block_name}\nDescription: {block_desc}")   
     try:
         url = '{0}/autnum/{1}'.format(BOOTSTRAP_URL, as_number)
-        response = asn_parser._JSONRequest().get_json(url=url)
+        response = json_request._JSONRequest().get_json(url=url)
         json = response
         parse_json = asn_parser._RDAPASEntity(json)
         parse_json.parse()

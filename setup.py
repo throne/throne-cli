@@ -11,7 +11,8 @@ setup(
     install_requires=[
         'Click',
         'colorama',
-        'requests'
+        'requests',
+        'pyyaml'
     ],
     entry_points={
         'console_scripts': ['throne=bin.throne:cli']

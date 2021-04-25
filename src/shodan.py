@@ -9,32 +9,19 @@ import os
 from requests import request
 # Import Throne Modules
 from src.parsers import json_request, shodan_parser
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
+from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError, ThroneConfigError)
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
 
 # Get home directory
 home = os.path.expanduser("~")
-# Check if .throne folder exists in home directory
-if not os.path.exists(f"{home}/.throne"):
-    os.makedirs(f"{home}/.throne")
-# Check if config file exists
+
 try:
     config = yaml.safe_load(open(f'{home}/.throne/config.yml'))
-    if "shodan_key" in config:
-        # If config file exists & "shodan_key" exists in yaml file, set shodan_apikey to value of shodan_key in yaml
-        shodan_apikey = config['shodan_key']
+    shodan_apikey = config['shodan_key']
 except:
-    # If shodan_key doesn't exist, prompt the user for the key, and save it to the config file
-    apikey_input = input("Enter Shodan API Key: ")
-    shodan_apikey = {'shodan_key': f"{apikey_input}"}
-    with open(f"{home}/.throne/config.yml", 'w') as throne_config:
-        yaml.dump(shodan_apikey, throne_config)
-
-# Open config file and set shodan_apikey to value of 'shodan_key' in yaml file
-config = yaml.safe_load(open(f'{home}/.throne/config.yml'))
-shodan_apikey = config['shodan_key']
+    pass
 
 # URLs
 SHODAN_HOST = 'https://api.shodan.io/shodan/host/'
@@ -49,7 +36,27 @@ def shodan():
     """
     pass
 
-@shodan.command(hidden=False)
+@shodan.command()
+def setapi():
+    """
+    Use this command to set your Shodan API key.
+    """
+    try:
+        # Make .throne directory
+        if not os.path.exists(f"{home}/.throne"):
+            os.makedirs(f"{home}/.throne")
+        config = yaml.safe_load(open(f'{home}/.throne/config.yml'))
+        if "shodan_key" in config:
+            # If config file exists & "shodan_key" exists in yaml file, set shodan_apikey to value of shodan_key in yaml
+            shodan_apikey = config['shodan_key']
+    except:
+        # If shodan_key doesn't exist, prompt the user for the key, and save it to the config file
+        apikey_input = input("Enter Shodan API Key: ")
+        shodan_apikey = {'shodan_key': f"{apikey_input}"}
+        with open(f"{home}/.throne/config.yml", 'w') as throne_config:
+            yaml.dump(shodan_apikey, throne_config)
+
+@shodan.command(hidden=True)
 @click.argument('address', nargs=1, metavar="IP_ADDRESS")
 def test(address):
     """
@@ -67,7 +74,10 @@ def info(raw):
     Return information about the plan belonging to\n
     the provided API key.
     """
-    url = '{0}?key={1}'.format(SHODAN_INFO, shodan_apikey)
+    try:
+        url = '{0}?key={1}'.format(SHODAN_INFO, shodan_apikey)
+    except NameError:
+        raise ThroneConfigError("Is your API key set? Run `throne shodan setapi` to set your API key.")
     response = json_request._JSONRequest().get_json(url=url)
     parse_json = shodan_parser._APIInfo(response)
     parse_json.parse()
@@ -88,7 +98,10 @@ def myip(raw):
     """
     Get your current public IP address.
     """
-    url = '{0}myip?key={1}'.format(SHODAN_TOOLS, shodan_apikey)
+    try:
+        url = '{0}myip?key={1}'.format(SHODAN_TOOLS, shodan_apikey)
+    except NameError:
+        raise ThroneConfigError("Is your API key set? Run `throne shodan setapi` to set your API key.")
     response = json_request._JSONRequest().get_json(url=url)
     if raw:
         click.echo(response)
@@ -109,21 +122,24 @@ def dns(query_type, query, raw):
     """
     Host to IP, IP to Host, Domain DNS information.
     """
-    query_list = []
-    for domain in query:
-        query_list.append(domain)
-        query = ','.join(query_list)
-    if query_type == None:
-        click.secho("You must specify a --query-type/-q option! View 'throne shodan dns --help' for more information.", fg="red")
-        exit()
-    elif "reverse" in query_type:
-        url = '{0}reverse?ips={1}&key={2}'.format(SHODAN_DNS, query, shodan_apikey)
-    elif "domain" in query_type:
-        if len(query_list) > 1:
-            raise ThroneFormattingError("Only 1 domain can be specified! Remove the others and try again.")
-        url = '{0}domain/{1}?key={2}'.format(SHODAN_DNS, query, shodan_apikey)
-    elif "resolve" in query_type:
-        url = '{0}resolve?hostnames={1}&key={2}'.format(SHODAN_DNS, query, shodan_apikey)
+    try:
+        query_list = []
+        for domain in query:
+            query_list.append(domain)
+            query = ','.join(query_list)
+        if query_type == None:
+            click.secho("You must specify a --query-type/-q option! View 'throne shodan dns --help' for more information.", fg="red")
+            exit()
+        elif "reverse" in query_type:
+            url = '{0}reverse?ips={1}&key={2}'.format(SHODAN_DNS, query, shodan_apikey)
+        elif "domain" in query_type:
+            if len(query_list) > 1:
+                raise ThroneFormattingError("Only 1 domain can be specified! Remove the others and try again.")
+            url = '{0}domain/{1}?key={2}'.format(SHODAN_DNS, query, shodan_apikey)
+        elif "resolve" in query_type:
+            url = '{0}resolve?hostnames={1}&key={2}'.format(SHODAN_DNS, query, shodan_apikey)
+    except NameError:
+        raise ThroneConfigError("Is your API key set? Run `throne shodan setapi` to set your API key.")
     response = json_request._JSONRequest().get_json(url=url)
     parse_json = shodan_parser._DNS(json_result=response, query_type=query_type)
     parse_json.parse()

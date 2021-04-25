@@ -5,6 +5,9 @@
 import logging
 import click
 import yaml
+import json
+from itertools import groupby
+from operator import itemgetter
 from requests import request
 # Import Throne Modules
 from src.parsers import json_request, shodan_parser
@@ -39,8 +42,7 @@ def test(address):
     """
     url = '{0}{1}?key={2}'.format(SHODAN_HOST, address, shodan_apikey)
     response = json_request._JSONRequest().get_json(url=url)
-    json = response
-    print(json)
+    print(response)
 
 @shodan.command()
 @click.option('--raw', '-r', is_flag=True)
@@ -51,8 +53,7 @@ def info(raw):
     """
     url = '{0}?key={1}'.format(SHODAN_INFO, shodan_apikey)
     response = json_request._JSONRequest().get_json(url=url)
-    json = response
-    parse_json = shodan_parser._APIInfo(json)
+    parse_json = shodan_parser._APIInfo(response)
     parse_json.parse()
     result = parse_json.vars
     if raw:
@@ -73,12 +74,11 @@ def myip(raw):
     """
     url = '{0}myip?key={1}'.format(SHODAN_TOOLS, shodan_apikey)
     response = json_request._JSONRequest().get_json(url=url)
-    json = response
     if raw:
-        click.echo(json)
+        click.echo(response)
     else:
         click.secho("---Public IP Address---", fg="green")
-        click.echo(f"{json}")
+        click.echo(f"{response}")
 
 @shodan.command()
 @click.option(
@@ -109,8 +109,7 @@ def dns(query_type, query, raw):
     elif "resolve" in query_type:
         url = '{0}resolve?hostnames={1}&key={2}'.format(SHODAN_DNS, query, shodan_apikey)
     response = json_request._JSONRequest().get_json(url=url)
-    json = response
-    parse_json = shodan_parser._DNS(json_result=json, query_type=query_type)
+    parse_json = shodan_parser._DNS(json_result=response, query_type=query_type)
     parse_json.parse()
     results = parse_json.vars
     if raw:
@@ -128,104 +127,159 @@ def dns(query_type, query, raw):
                 click.secho(" resolves to ", nl=False)
                 click.secho(f"{result['ip']}", fg="red")
         if "domain" in query_type:
-            print(results)
-            print()
+            jsondump = json.dumps(results)
             domain_tags = ', '.join(results['tags'])
             subdomains = ', '.join(results['subdomains'])
-            records_available = []
-            click.secho(f"Domain: {results['domain']}\nShodan Tags: {domain_tags}\nSubdomains: {subdomains}")
-            click.secho(f"--{query} Records--", fg="magenta")
-            for record in results['records']:
-                records_available.append(record['type'])
-            if "NS" in records_available:
-                click.secho("NS Record Value:")
-                for record in results['records']:
-                    record_tags = ', '.join(record['tags'])
-                    ports = ', '.join((str(x) for x in record['ports']))
-                    if record['domain'] == query:
-                        if "NS" in record['type']:
-                            click.secho(f" {record['value']}")
-            else:
-                pass
-            if "A" in records_available or "AAAA" in records_available:
-                click.secho("A/AAAA Record Value:")
-                for record in results['records']:
-                    record_tags = ', '.join(record['tags'])
-                    ports = ', '.join((str(x) for x in record['ports']))
-                    if record['domain'] == query:
-                        if "A" in record['type'] or "AAAA" in record['type']:
-                            click.secho(f" {record['value']}")
-                            if ports == "":
-                                pass
-                            else:
-                                click.echo(f" Ports Seen: {ports}")
-            else:
-                pass
-            if "MX" in records_available:
-                click.secho("MX Record Value:")
-                for record in results['records']:
-                    record_tags = ', '.join(record['tags'])
-                    ports = ', '.join((str(x) for x in record['ports']))
-                    if record['domain'] == query:
-                        if "MX" in record['type']:
-                            click.secho(f" {record['value']}")
-            else:
-                pass
-            if "SOA" in records_available:
-                click.secho("SOA Record Value:")
-                for record in results['records']:
-                    record_tags = ', '.join(record['tags'])
-                    ports = ', '.join((str(x) for x in record['ports']))
-                    if record['domain'] == query:
-                        if "SOA" in record['type']:
-                            click.secho(f" {record['value']}")
-            else:
-                pass
-            if "TXT" in records_available:
-                click.secho("TXT Record Value:")
-                for record in results['records']:
-                    record_tags = ', '.join(record['tags'])
-                    ports = ', '.join((str(x) for x in record['ports']))
-                    if record['domain'] == query:
-                        if "TXT" in record['type']:
-                            click.secho(f" {record['value']}")
-            else:
-                pass
-            if "CNAME" in records_available:
-                click.secho("CNAME Record Value:")
-                for record in results['records']:
-                    record_tags = ', '.join(record['tags'])
-                    ports = ', '.join((str(x) for x in record['ports']))
-                    if record['domain'] == query:
-                        if "CNAME" in record['type']:
-                            click.secho(f" {record['value']}")
-            else:
-                pass
-            for subdomain in results['subdomains']:
-                click.secho(f"--{subdomain} Records--", fg="magenta")
-                if "A" in records_available or "AAAA" in records_available:
-                    click.secho(f"A/AAAA Record Value:")
-                    for record in results['records']:
-                        record_tags = ', '.join(record['tags'])
+            all_domains = []
+            types = []
+            records = []
+            click.secho("Domain: ", fg="green", nl=False)
+            click.echo(f"{results['domain']}")
+            click.secho("Shodan Tags: ", fg="green", nl=False)
+            click.echo(f"{domain_tags}")
+            click.secho("Subdomains: ", fg="green", nl=False)
+            click.echo(f"{subdomains}")
+            for domains in results['records']:
+                for domain in domains.items():
+                    all_domains.append(domain[0])
+                    for record in domain[1]:
+                        records.append(record)
+                        record_types = record['type']
+                        if record_types not in types:
+                            types.append(record_types)
+                        else:
+                            pass
+            for domain in all_domains:
+                click.secho(f"--{domain} Records--", fg="magenta")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "A"):
+                        click.echo("A Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "A"):
                         ports = ', '.join((str(x) for x in record['ports']))
-                        if record['domain'] == subdomain:
-                            if "A" in record['type'] or "AAAA" in record['type']:
-                                click.secho(f" {record['value']}")
-                                if ports == "":
-                                    pass
-                                else:
-                                    click.echo(f" Ports Seen: {ports}")
-                else:
-                    pass
-                if "CNAME" in records_available:
-                    click.secho(f"CNAME Record Value:")
-                    for record in results['records']:
-                        record_tags = ', '.join(record['tags'])
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "AAAA"):
+                        click.echo("AAAA Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "AAAA"):
                         ports = ', '.join((str(x) for x in record['ports']))
-                        if record['domain'] == subdomain:
-                            if "CNAME" in record['type']:
-                                click.secho(f" {record['value']}")
-                            else:
-                                pass
-                else:
-                    pass
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "CNAME"):
+                        click.echo("CNAME Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "CNAME"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "MX"):
+                        click.echo("MX Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "MX"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "NS"):
+                        click.echo("NS Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "NS"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "PTR"):
+                        click.echo("PTR Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "PTR"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "CERT"):
+                        click.echo("CERT Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "CERT"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "SRV"):
+                        click.echo("SRV Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "SRV"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "TXT"):
+                        click.echo("TXT Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "TXT"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "SOA"):
+                        click.echo("SOA Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "SOA"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "DNSKEY"):
+                        click.echo("DNSKEY Records:")
+                        break
+                for record in records:
+                    if (record['domain'] == domain) and (record['type'] == "DNSKEY"):
+                        ports = ', '.join((str(x) for x in record['ports']))
+                        if ports == "":
+                            click.echo(f" Value: {record['value']} | Last Seen: {record['last_seen']}")
+                        else:
+                            click.echo(f" Value: {record['value']}", nl=False)
+                            click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")

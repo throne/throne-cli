@@ -5,6 +5,7 @@
 import logging
 import click
 import yaml
+import os
 from requests import request
 # Import Throne Modules
 from src.parsers import json_request, shodan_parser
@@ -13,8 +14,26 @@ from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLoo
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
 
-# Set config file
-config = yaml.safe_load(open('config/test-config.yml'))
+# Get home directory
+home = os.path.expanduser("~")
+# Check if .throne folder exists in home directory
+if not os.path.exists(f"{home}/.throne"):
+    os.makedirs(f"{home}/.throne")
+# Check if config file exists
+try:
+    config = yaml.safe_load(open(f'{home}/.throne/config.yml'))
+    if "shodan_key" in config:
+        # If config file exists & "shodan_key" exists in yaml file, set shodan_apikey to value of shodan_key in yaml
+        shodan_apikey = config['shodan_key']
+except:
+    # If shodan_key doesn't exist, prompt the user for the key, and save it to the config file
+    apikey_input = input("Enter Shodan API Key: ")
+    shodan_apikey = {'shodan_key': f"{apikey_input}"}
+    with open(f"{home}/.throne/config.yml", 'w') as throne_config:
+        yaml.dump(shodan_apikey, throne_config)
+
+# Open config file and set shodan_apikey to value of 'shodan_key' in yaml file
+config = yaml.safe_load(open(f'{home}/.throne/config.yml'))
 shodan_apikey = config['shodan_key']
 
 # URLs

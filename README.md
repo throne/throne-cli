@@ -24,3 +24,4 @@ multiple different sources and presents the information you're looking for in on
 - [RIPEstat](https://stat.ripe.net/docs/data_api)
 - [PeeringDB](https://www.peeringdb.com/apidocs/)
 - [ip-api](https://ip-api.com/)
+- [Shodan](https://developer.shodan.io/api/introduction)

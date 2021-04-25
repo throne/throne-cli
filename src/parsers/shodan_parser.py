@@ -47,3 +47,128 @@ class _DNS():
     def __init__(self, json_result, query_type):
         self.json = json_result
         self.type = query_type
+        self.vars = {}
+        self.reverse_vars = {
+            'ip': None,
+            'hostname': None,
+        }
+        self.resolve_vars = {
+            'ip': None,
+            'hostname': None,
+        }
+        self.record_vars = {
+                'value': None,
+                'subdomain': None,
+                'type': None,
+                'ports': None,
+                'last_seen': None
+            }
+    def parse(self):
+        if "reverse" in self.type:
+            self.vars.update({
+                'result': []
+            })
+            for k,v in self.json.items():
+                self.resolve_vars = {
+                'ip': None,
+                'hostname': None,
+                }
+                self.resolve_vars['ip'] = k
+                try:
+                    for hostname in v:
+                        self.resolve_vars['hostname'] = hostname
+                except:
+                    pass
+                self.vars['result'].append(self.resolve_vars)
+        if "resolve" in self.type:
+            self.vars.update({
+                'result': []
+            })
+            for k,v in self.json.items():
+                self.resolve_vars = {
+                'hostname': None,
+                'ip': None,
+                }
+                self.resolve_vars['hostname'] = k
+                self.resolve_vars['ip'] = v
+                self.vars['result'].append(self.resolve_vars)
+        if "domain" in self.type:
+            self.vars.update({
+            'domain': None,
+            'tags': [],
+            'subdomains': [],
+            'records': [],
+            })
+            self.domain_vars = {}
+            self.vars['domain'] = self.json['domain']
+            if self.json['domain'] not in self.domain_vars.keys():
+                domain = self.json['domain']
+                self.domain_vars.update({domain: []})
+            else:
+                pass
+            for tag in self.json['tags']:
+                try:
+                    self.vars['tags'].append(tag)
+                except:
+                    pass
+            for subdomain in self.json['subdomains']:
+                try:
+                    subdomain = subdomain + f".{self.json['domain']}"
+                    self.vars['subdomains'].append(subdomain)
+                    if subdomain not in self.domain_vars.keys():
+                        self.domain_vars.update({subdomain: []})
+                    else:
+                        pass
+                except:
+                    pass
+            for record in self.json['data']:
+                self.record_vars = {
+                    'tags': [],
+                    'value': None,
+                    'domain': None,
+                    'type': None,
+                    'ports': [],
+                    'last_seen': None,
+                }
+                for subdomain in self.domain_vars:
+                    try:
+                        try:
+                            for tag in record['tags']:
+                                if tag not in self.record_vars['tags']:
+                                    self.record_vars['tags'].append(tag)
+                        except:
+                            pass
+                        try:
+                            self.record_vars['value'] = record['value']
+                        except:
+                            pass
+                        try:
+                            if record['subdomain'] == '':
+                                self.record_vars['domain'] = self.json['domain']
+                            else:
+                                domain = record['subdomain'] + f".{self.json['domain']}"
+                                self.record_vars['domain'] = domain
+                        except:
+                            pass
+                        try:
+                            self.record_vars['type'] = record['type']
+                        except:
+                            pass
+                        try:
+                            for port in record['ports']:
+                                if port not in self.record_vars['ports']:
+                                    self.record_vars['ports'].append(port)
+                        except:
+                            pass
+                        try:
+                            self.record_vars['last_seen'] = record['last_seen']
+                        except:
+                            pass
+                        if subdomain == self.record_vars['domain']:
+                            self.domain_vars[subdomain].append(self.record_vars)
+                    except:
+                        pass
+                if self.domain_vars not in self.vars['records']:
+                    self.vars['records'].append(self.domain_vars)
+                else:
+                    pass

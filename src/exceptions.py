@@ -28,3 +28,9 @@ class ThroneHTTPError(ThroneBaseException):
     """
     An exception for various HTTP errors encountered.
     """
+
+class ThroneConfigError(ThroneBaseException):
+    """
+    An exception for when there is an error/issue 
+    with the .throne/config.yml file.
+    """

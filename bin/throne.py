@@ -19,6 +19,7 @@ import click
 from src.bgp import bgp
 from src.peeringdb import pdb
 from src.ip import ip
+from src.shodan import shodan
 
 class Throne:
     def __init__(self):
@@ -41,3 +42,4 @@ def cli(ctx, verbose):
 cli.add_command(bgp)
 cli.add_command(pdb)
 cli.add_command(ip)
+cli.add_command(shodan)

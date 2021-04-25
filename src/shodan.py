@@ -5,9 +5,6 @@
 import logging
 import click
 import yaml
-import json
-from itertools import groupby
-from operator import itemgetter
 from requests import request
 # Import Throne Modules
 from src.parsers import json_request, shodan_parser
@@ -127,7 +124,6 @@ def dns(query_type, query, raw):
                 click.secho(" resolves to ", nl=False)
                 click.secho(f"{result['ip']}", fg="red")
         if "domain" in query_type:
-            jsondump = json.dumps(results)
             domain_tags = ', '.join(results['tags'])
             subdomains = ', '.join(results['subdomains'])
             all_domains = []

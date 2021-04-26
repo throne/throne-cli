@@ -51,8 +51,6 @@ jobs:
         ref: 'refs/pull/${{ github.event.client_payload.pull_request.number }}/merge'
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
-      env:
-        SHODAN_KEY: ${{ secrets.SHODAN_KEY }}
       with:
         python-version: 3.9
     - name: Install Flake8, pyTest & throne (from source)
@@ -67,6 +65,8 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+      env:
+        SHODAN_KEY: ${{ secrets.SHODAN_KEY }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
 

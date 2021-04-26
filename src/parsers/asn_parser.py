@@ -18,8 +18,8 @@ BOOTSTRAP_URL = 'https://rdap-bootstrap.arin.net/bootstrap'
 AFRNIC_URL = 'https://rdap.afrinic.net/rdap'
 RIPESTAT_URL = 'https://stat.ripe.net/data'
 
-# Set python check interval to 0, hopefully to improve performance
-sys.setcheckinterval(0)
+# Set python check interval to 1, hopefully to improve performance
+sys.setswitchinterval(1)
 
 ####################THIS LINE SEPERATES RDAP PARSERS FROM OTHER ASN PARSERS####################
 class _RDAPASCommon:

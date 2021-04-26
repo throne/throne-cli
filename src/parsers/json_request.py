@@ -13,8 +13,8 @@ from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLoo
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
 
-# Set python check interval to 0, hopefully to improve performance
-sys.setcheckinterval(0)
+# Set python check interval to 1, hopefully to improve performance
+sys.setswitchinterval(1)
 
 class _JSONRequest():
     # This class is used to get JSON data from a specified URL.

@@ -5,8 +5,6 @@ from bin.throne import cli as throne
 
 runner = CliRunner()
 
-shodan_key = os.getenv('SHODAN_KEY')
-
 def test_ipgeo():
     print("Testing: throne ip geo 1.1.1.1")
     response = runner.invoke(throne, ["ip", "geo", "1.1.1.1"])

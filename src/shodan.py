@@ -42,19 +42,15 @@ def setapi():
     Use this command to set your Shodan API key.
     """
     try:
-        # Make .throne directory
         if not os.path.exists(f"{home}/.throne"):
             os.makedirs(f"{home}/.throne")
-        config = yaml.safe_load(open(f'{home}/.throne/config.yml'))
-        if "shodan_key" in config:
-            # If config file exists & "shodan_key" exists in yaml file, set shodan_apikey to value of shodan_key in yaml
-            shodan_apikey = config['shodan_key']
-    except:
-        # If shodan_key doesn't exist, prompt the user for the key, and save it to the config file
         apikey_input = input("Enter Shodan API Key: ")
         shodan_apikey = {'shodan_key': f"{apikey_input}"}
         with open(f"{home}/.throne/config.yml", 'w') as throne_config:
             yaml.dump(shodan_apikey, throne_config)
+        click.secho("Successfully set Shodan API key.", fg="green")
+    except:
+        raise ThroneConfigError("Failed to set Shodan API key.")
 
 @shodan.command(hidden=True)
 @click.argument('address', nargs=1, metavar="IP_ADDRESS")

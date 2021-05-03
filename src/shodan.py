@@ -310,3 +310,39 @@ def dns(query_type, query, raw):
                         else:
                             click.echo(f" Value: {record['value']}", nl=False)
                             click.echo(f" | Ports Opened: {ports} | Last Seen: {record['last_seen']}")
+
+@shodan.command()
+@click.option('--raw', '-r', is_flag=True)
+@click.argument('query', metavar="query", nargs=1)
+def search(query, raw):
+    """
+    Get information for a specified IP address.
+    """
+    url = '{0}{1}?key={2}'.format(SHODAN_HOST, query, shodan_apikey)
+    response = json_request._JSONRequest().get_json(url=url)
+    parse_json = shodan_parser._IPSearch(json_result=response)
+    parse_json.parse()
+    tl_results = parse_json.tl_vars
+    if raw:
+        click.echo(response)
+    else:
+        # Shared Variables
+        comma = ", "
+        # Top-Level (TL) Variables
+        TL_domains = ', '.join((str(x) for x in tl_results['domains']))
+        TL_hostnames = ', '.join((str(x) for x in tl_results['hostnames']))
+        TL_ports = ', '.join((str(x) for x in tl_results['ports']))
+        TL_region_code = response['region_code']
+        TL_country_code = response['country_code']
+        TL_city = response['city']
+        TL_location = [TL_city, TL_region_code, TL_country_code]
+        TL_location = comma.join(TL_location)
+        click.secho(f"---Shodan Results For {response['ip_str']}---", fg="yellow")
+        click.echo(f"Data Last Updated: {response['last_update']}")
+        click.echo(f"ASN: {response['asn']}")
+        click.echo(f"ISP: {response['isp']}")
+        click.echo(f"Location: {TL_location}")
+        click.echo(f" Lat/Long: {response['latitude']},{response['longitude']}")
+        click.echo(f"Domain(s): {TL_domains}")
+        click.echo(f"Hostname(s): {TL_hostnames}")
+        click.echo(f"Port(s): {TL_ports}")

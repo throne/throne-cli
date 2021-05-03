@@ -172,3 +172,22 @@ class _DNS():
                     self.vars['records'].append(self.domain_vars)
                 else:
                     pass
+
+class _IPSearch():
+    def __init__(self, json_result):
+        self.json = json_result
+        self.tl_vars = {
+            'domains': [],
+            'hostnames': [],
+            'ports': [],
+        }
+    def parse(self):
+        for hostname in self.json['hostnames']:
+            if hostname not in self.tl_vars['hostnames']:
+                self.tl_vars['hostnames'].append(hostname)
+        for domain in self.json['domains']:
+            if domain not in self.tl_vars['domains']:
+                self.tl_vars['domains'].append(domain)
+        for port in self.json['ports']:
+            if port not in self.tl_vars['ports']:
+                self.tl_vars['ports'].append(port)

@@ -8,7 +8,7 @@ import sys
 from requests import request
 # Import Throne Modules
 from src.parsers import json_request
-from src.parsers import asn_parser
+from src.parsers import rdap_asn_parser as asn_parser
 from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
 
 # Set log variable for verbose output

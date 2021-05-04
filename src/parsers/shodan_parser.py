@@ -172,3 +172,61 @@ class _DNS():
                     self.vars['records'].append(self.domain_vars)
                 else:
                     pass
+
+class _IPSearch():
+    def __init__(self, json_result, query):
+        self.json = json_result
+        self.query = query
+        self.vars = {
+            'query': self.query,
+        }
+    def parse(self):
+        comma = ", "
+        self.vars.update({
+            'domains': [],
+            'hostnames': [],
+            'ports': [],
+            'location': None,
+            'coords': None,
+            'protocols': [],
+        })
+        for hostname in self.json['hostnames']:
+            if hostname not in self.vars['hostnames']:
+                self.vars['hostnames'].append(hostname)
+        for domain in self.json['domains']:
+            if domain not in self.vars['domains']:
+                self.vars['domains'].append(domain)
+        for port in self.json['ports']:
+            if port not in self.vars['ports']:
+                self.vars['ports'].append(port)
+        result_location = [self.json['city'], self.json['region_code'], self.json['country_code']]
+        result_location = comma.join(result_location)
+        self.vars['location'] = result_location
+        result_coords = [str(self.json['latitude']), str(self.json['longitude'])]
+        result_coords = comma.join(result_coords)
+        self.vars['coords'] = result_coords
+        for data in self.json['data']:
+            for k,v in data['_shodan'].items():
+                if k == "module":
+                    if v not in self.vars['protocols']:
+                        self.vars['protocols'].append(v)
+                    self.vars.update({
+                        v: [] 
+                    })
+            for protocol in self.vars['protocols']:
+                self.protocol_vars = {
+                    'ip': None,
+                    'port': None,
+                    'hostnames': [],
+                    'domains': [],
+                }
+                if data['_shodan']['module'] == protocol:
+                    self.protocol_vars['ip'] = data['ip_str']
+                    self.protocol_vars['port'] = data['port']
+                    for hostname in data['hostnames']:
+                        if hostname not in self.protocol_vars['hostnames']:
+                            self.protocol_vars['hostnames'].append(hostname)
+                    for domain in data['domains']:
+                        if domain not in self.protocol_vars['domains']:
+                            self.protocol_vars['domains'].append(domain)
+                    self.vars[protocol].append(self.protocol_vars)

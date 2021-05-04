@@ -7,7 +7,7 @@ import click
 from requests import request
 # Import Throne Modules
 from src.parsers import json_request
-from src.parsers import ip_parser
+from src.parsers import rdap_ip_parser as ip_parser
 from src.bgp import asn as get_asn
 from src.bgp import raw as get_asn_raw
 

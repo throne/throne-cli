@@ -49,25 +49,29 @@ def test_bgplook_ny():
     print("Testing: throne bgp look 1.1.1.1 from New York")
     response = runner.invoke(throne, ["bgp", "look", "1.1.1.1", "--location", "US-NY"])
     assert response.exit_code == 0
-    assert "Peer Location: New York City, New York, US" in response.output
+    assert "Origin AS: 13335" in response.output
+    assert "Prefix: 1.1.1.0/24" in response.output
 
 def test_bgplook_de():
     print("Testing: throne bgp look 1.1.1.1 from Frankfurt")
     response = runner.invoke(throne, ["bgp", "look", "1.1.1.1", "--location", "DE"])
     assert response.exit_code == 0
-    assert "Peer Location: Frankfurt, Germany" in response.output
+    assert "Origin AS: 13335" in response.output
+    assert "Prefix: 1.1.1.0/24" in response.output
 
 def test_bgplook_za():
     print("Testing: throne bgp look 1.1.1.1 from Johannesburg")
     response = runner.invoke(throne, ["bgp", "look", "1.1.1.1", "--location", "ZA"])
     assert response.exit_code == 0
-    assert "Peer Location: Johannesburg, South Africa" in response.output
+    assert "Origin AS: 13335" in response.output
+    assert "Prefix: 1.1.1.0/24" in response.output
 
 def test_bgplook_jp():
     print("Testing: throne bgp look 1.1.1.1 from Tokyo")
     response = runner.invoke(throne, ["bgp", "look", "1.1.1.1", "--location", "JP"])
     assert response.exit_code == 0
-    assert "Peer Location: Tokyo, Japan" in response.output
+    assert "Origin AS: 13335" in response.output
+    assert "Prefix: 1.1.1.0/24" in response.output
 
 def test_bgpprefix():
     print("Testing: throne bgp prefix 1.1.1.0/24")

@@ -1,5 +1,7 @@
 # throne-cli
 
+[![Master Branch Testing](https://github.com/throne/throne-cli/actions/workflows/master-push.yml/badge.svg?branch=master)](https://github.com/throne/throne-cli/actions/workflows/master-push.yml) [![Development Branch Testing](https://github.com/throne/throne-cli/actions/workflows/dev-push.yml/badge.svg?branch=devel)](https://github.com/throne/throne-cli/actions/workflows/dev-push.yml)
+
 [Read the full docs here!](https://www.throne.dev/docs/introduction)
 
 ## What is throne?

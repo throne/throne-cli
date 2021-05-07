@@ -344,3 +344,11 @@ def search(query, raw, all):
         click.echo(f"Hostname(s): {hostnames}")
         click.echo(f"Port(s): {ports}")
         click.echo(f"Found Protocols: {protocols}")
+        for protocol in results['protocols']:
+            click.secho(f"--{protocol} Information--", fg="yellow")
+            for idx, entry in enumerate(results['data'][protocol]):
+                hostnames = ', '.join((str(x) for x in entry['hostnames']))
+                domains = ', '.join((str(x) for x in entry['domains']))
+                if idx > 0:
+                    click.echo("--")
+                click.echo(f"IP: {entry['ip']}\nPort: {entry['port']}\nHostnames: {hostnames}\nDomains: {domains}")

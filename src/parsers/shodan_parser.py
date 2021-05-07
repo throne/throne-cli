@@ -189,6 +189,7 @@ class _IPSearch():
             'location': None,
             'coords': None,
             'protocols': [],
+            'data': {}
         })
         for hostname in self.json['hostnames']:
             if hostname not in self.vars['hostnames']:
@@ -210,9 +211,14 @@ class _IPSearch():
                 if k == "module":
                     if v not in self.vars['protocols']:
                         self.vars['protocols'].append(v)
-                    self.vars.update({
-                        v: [] 
-                    })
+                    else:
+                        v = v+"-1"
+                    if "-1" not in v:
+                        self.vars['data'].update({
+                            v: [] 
+                        })
+                    else:
+                        pass
             for protocol in self.vars['protocols']:
                 self.protocol_vars = {
                     'ip': None,
@@ -229,4 +235,4 @@ class _IPSearch():
                     for domain in data['domains']:
                         if domain not in self.protocol_vars['domains']:
                             self.protocol_vars['domains'].append(domain)
-                    self.vars[protocol].append(self.protocol_vars)
+                    self.vars['data'][protocol].append(self.protocol_vars)

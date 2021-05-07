@@ -1,4 +1,4 @@
-name: Master Branch Testing
+name: Master Branch
 
 on:
   push:

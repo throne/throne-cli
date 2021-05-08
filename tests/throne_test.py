@@ -47,28 +47,28 @@ def test_bgpasn_ripe():
 
 def test_bgplook_ny():
     print("Testing: throne bgp look 1.1.1.1 from New York")
-    response = runner.invoke(throne, ["bgp", "look", "1.1.1.1", "--location", "US-NY"])
+    response = runner.invoke(throne, ["bgp", "lg", "1.1.1.1", "--location", "US-NY"])
     assert response.exit_code == 0
     assert "Origin AS: 13335" in response.output
     assert "Prefix: 1.1.1.0/24" in response.output
 
 def test_bgplook_de():
     print("Testing: throne bgp look 1.1.1.1 from Frankfurt")
-    response = runner.invoke(throne, ["bgp", "look", "1.1.1.1", "--location", "DE"])
+    response = runner.invoke(throne, ["bgp", "lg", "1.1.1.1", "--location", "DE"])
     assert response.exit_code == 0
     assert "Origin AS: 13335" in response.output
     assert "Prefix: 1.1.1.0/24" in response.output
 
 def test_bgplook_za():
     print("Testing: throne bgp look 1.1.1.1 from Johannesburg")
-    response = runner.invoke(throne, ["bgp", "look", "1.1.1.1", "--location", "ZA"])
+    response = runner.invoke(throne, ["bgp", "lg", "1.1.1.1", "--location", "ZA"])
     assert response.exit_code == 0
     assert "Origin AS: 13335" in response.output
     assert "Prefix: 1.1.1.0/24" in response.output
 
 def test_bgplook_jp():
     print("Testing: throne bgp look 1.1.1.1 from Tokyo")
-    response = runner.invoke(throne, ["bgp", "look", "1.1.1.1", "--location", "JP"])
+    response = runner.invoke(throne, ["bgp", "lg", "1.1.1.1", "--location", "JP"])
     assert response.exit_code == 0
     assert "Origin AS: 13335" in response.output
     assert "Prefix: 1.1.1.0/24" in response.output

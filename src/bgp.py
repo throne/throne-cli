@@ -25,20 +25,6 @@ def bgp():
     """
     pass
 
-@bgp.command(hidden=True)
-@click.argument('as_number', nargs=1, metavar="ASNUM")
-def raw(as_number):
-    """
-    Get raw JSON output from asn_parser.py
-    """
-    url = '{0}/autnum/{1}'.format(BOOTSTRAP_URL, as_number)
-    response = json_request._JSONRequest().get_json(url=url)
-    json = response
-    parse_json = asn_parser._RDAPASEntity(json)
-    parse_json.parse()
-    result = parse_json.vars
-    click.echo(result)
-
 @bgp.command()
 @click.argument('as_number', nargs=1, metavar="ASNUM")
 def asn(as_number):

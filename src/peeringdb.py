@@ -33,7 +33,7 @@ def asn(as_number):
     response = json_request._JSONRequest().get_json(url=url)
     json = response
     if json['data'] == []:
-        raise ThroneHTTPError(f"PeeringDB returned a blank result. Please check your query and try again. If the issue persists, manually query PeeringDB to see if the entry exists.\nJSON Returned: {json}")
+        raise ThroneParsingError(f"PeeringDB returned a blank result. Please check your query and try again. If the issue persists, manually query PeeringDB to see if the entry exists.\nJSON Returned: {json}")
     else:
         for v in json['data'][0].items():
             if v is not None:

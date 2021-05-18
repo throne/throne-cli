@@ -1,8 +1,14 @@
 # throne-cli
 
-[![Master Branch Testing](https://github.com/throne/throne-cli/actions/workflows/master-push.yml/badge.svg?branch=master)](https://github.com/throne/throne-cli/actions/workflows/master-push.yml) [![Development Branch Testing](https://github.com/throne/throne-cli/actions/workflows/dev-push.yml/badge.svg?branch=devel)](https://github.com/throne/throne-cli/actions/workflows/dev-push.yml)
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com) 
 
-[Read the full docs here!](https://www.throne.dev/docs/introduction)
+[![PyPI](https://img.shields.io/pypi/v/throne?color=gold&label=throne&style=for-the-badge)](https://www.throne.dev) ![Maintenance](https://img.shields.io/maintenance/yes/2022?style=for-the-badge) ![GitHub](https://img.shields.io/github/license/throne/throne-cli?style=for-the-badge)
+
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/throne/throne-cli/Master%20Branch/master?label=Master%20Branch&style=for-the-badge)](https://github.com/throne/throne-cli/actions/workflows/master-push.yml) [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/throne/throne-cli/Development%20Branch/devel?label=Development%20Branch&style=for-the-badge)](https://github.com/throne/throne-cli/actions/workflows/dev-push.yml)
+
+## [Read the full docs here!](https://www.throne.dev/docs/introduction)
+
+---
 
 ## What is throne?
 **throne** is an open-source command line tool developed by a network engineer for network engineers. thrones purpose is to help make looking up
@@ -27,3 +33,5 @@ multiple different sources and presents the information you're looking for in on
 - [PeeringDB](https://www.peeringdb.com/apidocs/)
 - [ip-api](https://ip-api.com/)
 - [Shodan](https://developer.shodan.io/api/introduction)
+- [IANA RDAP](https://www.iana.org/help/rdap-requirements)
+- [throne API](https://www.throne.dev/docs/throne-api)

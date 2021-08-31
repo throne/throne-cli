@@ -5,7 +5,10 @@
 import click
 import logging
 import sys
+import os
+import yaml
 from requests import request
+from pathlib import Path
 # Import Throne Modules
 from src.parsers import json_request
 from src.parsers import rdap_asn_parser as asn_parser
@@ -15,8 +18,22 @@ from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLoo
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
 
+# Get home directory
+home = os.path.expanduser("~")
+config_file = f'{home}/.throne/config.yml'
+
+try:
+    config = yaml.safe_load(open(config_file))
+    throne_apikey = config['throne_key']
+except:
+    throne_apikey = None
+
+# URLs
+#THRONE_API = "https://api.throne.dev/"
+THRONE_API = "http://10.0.3.18:8080/"
 BOOTSTRAP_URL = 'https://rdap-bootstrap.arin.net/bootstrap'
 RIPESTAT_ASOverview = 'https://stat.ripe.net/data/as-overview/data.json?resource='
+THRONE_API = 'http://10.0.3.18:8080/'
 
 @click.group()
 def bgp():
@@ -31,62 +48,59 @@ def asn(as_number):
     """
     Gets information on the specified AS number.
     """
-    # Get Info from RIPEStat
-    url = '{0}{1}'.format(RIPESTAT_ASOverview, as_number)
-    response = json_request._JSONRequest().get_json(url=url)
-    # Take RIPEStat JSON response and put it as the JSON variable
-    json = response
-    asn = json['data']['resource']
-    as_block = json['data']['block']['resource']
-    block_desc = json['data']['block']['desc']
-    block_name = json['data']['block']['name']
-    holder = json['data']['holder']
-    announced = json['data']['announced']
-    click.secho("---Basic ASN Info--", fg='green')
-    click.echo(f"AS#: {asn}\nHolder: {holder}\nAnnounced: {announced}")
-    click.secho("---AS Block Info---", fg='green')
-    click.echo(f"AS Block: {as_block}\nName: {block_name}\nDescription: {block_desc}")   
-    try:
-        url = '{0}/autnum/{1}'.format(BOOTSTRAP_URL, as_number)
+    if throne_apikey:
+        url = '{0}{1}'.format(RIPESTAT_ASOverview, as_number)
         response = json_request._JSONRequest().get_json(url=url)
+        # Take RIPEStat JSON response and put it as the JSON variable
         json = response
-        parse_json = asn_parser._RDAPASEntity(json)
-        parse_json.parse()
-        result = parse_json.vars
-        log.debug("Received parsed JSON back from asn_parser.py...")
-        rir = result['rir']
-        handle = result['handle']
-        click.secho(f'---{rir}/{handle} Contact Information---', fg='green')
-        if "RIPE" in rir:
-            log.debug("Detected RIPE as RIR...all non-abuse contacts are filtered by RIPE. See RIPE database docs for more information.")
-        for ent in result['entities']:
-            name = ent['name']
-            kind = ent['roles']
-            delimeter = "/"
-            kind = delimeter.join(kind).title()
-            click.secho(f'{name} ({kind}):')
-            try:
-                for email in ent['email']:
-                    email = email['value']
-            except:
-                email = "None"
-            try:
-                for address in ent['address']:
-                    address = address['value']
-            except:
-                address = "None"
-            try:
-                for phone in ent['phone']:
-                    phone = phone['value']
-            except:
-                phone = "None"
+        asn = json['data']['resource']
+        as_block = json['data']['block']['resource']
+        block_desc = json['data']['block']['desc']
+        block_name = json['data']['block']['name']
+        holder = json['data']['holder']
+        announced = json['data']['announced']
+        click.secho("---Basic ASN Info--", fg='green')
+        click.echo(f"AS#: {asn}\nHolder: {holder}\nAnnounced: {announced}")
+        click.secho("---AS Block Info---", fg='green')
+        click.echo(f"AS Block: {as_block}\nName: {block_name}\nDescription: {block_desc}")   
+        try:
+            url = '{0}whois/asn?query={1}'.format(THRONE_API, as_number)
+            headers = {'Authorization': f'{throne_apikey}'}
+            response = request("GET", url, headers=headers)
+            result = response.json()
+            rir = result['rir']
+            handle = result['handle']
+            click.secho(f'---{rir}/{handle} Contact Information---', fg='green')
             if "RIPE" in rir:
-                click.echo(" Entity Address: " + address + "\n Entity Phone: " + phone + "\n Entity Email: " + email)
-                click.secho("\nSome of these details may be filtered by RIPE. To verify this information please visit https://apps.db.ripe.net/db-web-ui/query.", fg='red')
-            else:
-                click.echo(" Entity Address: " + address + "\n Entity Phone: " + phone + "\n Entity Email: " + email)
-    except:
-        raise ThroneLookupFailed("Failed to get additional RIR data.")
+                log.debug("Detected RIPE as RIR...all non-abuse contacts are filtered by RIPE. See RIPE database docs for more information.")
+            for ent in result['entities']:
+                name = ent['name']
+                kind = ent['roles']
+                delimeter = "/"
+                kind = delimeter.join(kind).title()
+                click.secho(f'{name} ({kind}):')
+                if ent['email'] is not None:
+                    email = ent['email']
+                else:
+                    email = "None"
+                if ent['address'] is not None:
+                    address = ent['address']
+                else:
+                    address = "None"
+                if ent['phone'] is not None:
+                    phone = ent['phone']
+                else:
+                    phone = "None"
+                if "RIPE" in rir:
+                    click.echo(" Entity Address: " + address + "\n Entity Phone: " + phone + "\n Entity Email: " + email)
+                    click.secho("\nSome of these details may be filtered by RIPE. To verify this information please visit https://apps.db.ripe.net/db-web-ui/query.", fg='red')
+                else:
+                    click.echo(" Entity Address: " + address + "\n Entity Phone: " + phone + "\n Entity Email: " + email)
+        except:
+            raise ThroneLookupFailed("Failed to get additional RIR data.")
+    if throne_apikey == None:
+        click.secho("throne API key required! Run `throne api setapi` to configure your API key.", fg="red")
+        click.secho("If you do not have an account, please register for one by visting https://api.throne.dev/auth/login and click 'Sign Up' at the bottom of the prompt", fg="red")
 
 @bgp.command()
 @click.argument('prefix', nargs=1, metavar="ADDRESS_OR_PREFIX")

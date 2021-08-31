@@ -17,6 +17,6 @@ def test_shodan_setapi():
 
 def test_throne_setapi():
     print("Testing: throne api setapi")
-    response = runner.invoke(throne, ["api", "setapi"], input=f"{throne_user}\n{throne_pass}\nN")
+    response = runner.invoke(throne, ["api", "setapi", "-u", f"{throne_user}", "-p", f"{throne_pass}"])
     assert response.exit_code == 0
     assert "Successfully set throne API key." in response.output

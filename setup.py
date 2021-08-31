@@ -7,7 +7,7 @@ README = (parent_dir / "README.md").read_text()
 setup(
     name='throne',
     version='0.3.0',
-    author='shrunbr',
+    author='throne:shrunbr',
     author_email='shrunbr@throne.dev',
     url='https://github.com/throne/throne-cli/',
     description='Watch the internet from up on your throne.',

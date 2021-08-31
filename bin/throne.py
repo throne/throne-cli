@@ -9,6 +9,7 @@ from src.peeringdb import pdb
 from src.ip import ip
 from src.shodan import shodan
 from src.whois import whois
+from src.api import api
 
 class Throne:
     def __init__(self):
@@ -33,3 +34,4 @@ cli.add_command(pdb)
 cli.add_command(ip)
 cli.add_command(shodan)
 cli.add_command(whois)
+cli.add_command(api)

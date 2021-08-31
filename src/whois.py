@@ -26,7 +26,7 @@ except:
 
 # URLs
 #THRONE_API = "https://api.throne.dev/"
-THRONE_API = "http://10.0.3.18:8080/"
+THRONE_API = "https://dev-api.throne.dev/"
 
 @click.group()
 def whois():

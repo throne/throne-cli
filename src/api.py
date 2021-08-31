@@ -36,21 +36,25 @@ def api():
     """
     pass
 
+@click.option('--username', '-u', default=None, help="[OPTIONAL] Sets username")
+@click.option('--password', '-p', default=None, help="[OPTIONAL] Sets password")
+@click.option('--scope', '-s', default=None, help="[OPTIONAL] Sets scope")
 @api.command()
-def setapi():
+def setapi(username, password, scope):
     """
     Use this command to login to the throne API and set your API key
     """
-    username = input("Username: ")
-    password = getpass("Password: ")
-    set_scope = input("Do you wish to set a scope? (Y/N): ")
-    if set_scope == "y" or set_scope == "Y":
-        scope = input("Scope: ")
-    elif set_scope == "n" or set_scope == "N":
-        scope = None
-    else:
-        print("Invalid Option. Please select Y or N.")
-        exit()
+    if username is None:
+        username = input("Username: ")
+        password = getpass("Password: ")
+        set_scope = input("Do you wish to set a scope? (Y/N): ")
+        if set_scope == "y" or set_scope == "Y":
+            scope = input("Scope: ")
+        elif set_scope == "n" or set_scope == "N":
+            scope = None
+        else:
+            print("Invalid Option. Please select Y or N.")
+            exit()
     try:
         if not os.path.exists(f"{home}/.throne"):
             os.makedirs(f"{home}/.throne")

@@ -7,7 +7,7 @@ runner = CliRunner()
 
 shodan_key = os.getenv('SHODAN_KEY')
 throne_user = os.getenv('THRONE_USER')
-throne_pass = os.getenv('THONE_PASS')
+throne_pass = os.getenv('THRONE_PASS')
 
 def test_shodan_setapi():
     print("Testing: throne shodan setapi")

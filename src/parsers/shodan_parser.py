@@ -2,12 +2,8 @@
 # SEE PROVIDED LICENSE FILE IN ROOT DIRECTORY
 
 # Import Third Party Modules
-import json
-import urllib3
-import sys
 import logging
 # Import Throne Modules
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)

@@ -4,7 +4,6 @@
 # Import Third Party Modules
 import click
 import logging
-import sys
 import os
 import yaml
 from requests import request
@@ -13,7 +12,7 @@ from pathlib import Path
 from src.parsers import json_request
 from src.parsers import rdap_asn_parser as asn_parser
 from src.parsers import lg_parser
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
+from src.exceptions import ThroneLookupFailed
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)

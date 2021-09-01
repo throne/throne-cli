@@ -8,8 +8,6 @@ import yaml
 import os
 from requests import request
 # Import Throne Modules
-from src.parsers import json_request
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError, ThroneConfigError)
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
@@ -74,7 +72,7 @@ def domain(domain):
             click.secho(f"Registrar {contact.capitalize()} Contact Information:", fg="green")
             try:
                 for data in result['whois']['contact_info']['registrar']:
-                        if data['name'] == None:
+                        if data['name'] is None:
                             click.echo(f" Name: {result['registrar']['name']}")
                         else:
                             click.echo(f" Name: {data['name']}")
@@ -182,6 +180,6 @@ def domain(domain):
                     click.echo(f"Registration Date: {result['whois']['registration_info']['registration']}")
         except:
             pass
-    if throne_apikey == None:
+    if throne_apikey is None:
         click.secho("throne API key required! Run `throne api setapi` to configure your API key.", fg="red")
         click.secho("If you do not have an account, please register for one by visting https://api.throne.dev/auth/login and click 'Sign Up' at the bottom of the prompt", fg="red")

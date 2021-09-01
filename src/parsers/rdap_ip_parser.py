@@ -2,12 +2,10 @@
 # SEE PROVIDED LICENSE FILE IN ROOT DIRECTORY
 
 # Import Third Party Modules
-import json
-import urllib3
 import sys
 import logging
 # Import Throne Modules
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
+from src.exceptions import ThroneParsingError
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
@@ -104,7 +102,7 @@ class _RDAPIPEntity(_RDAPIPCommon):
                                 self.vars['entities'].append(c.vars)
                             except:
                                 log.debug("There might be more data for this IP...RIPE filters all contacts except abuse contacts. Filtered contacts are not displayed.")
-                                pass
+
                 # Parse APNIC formatted data
                 if "apnic" in self.json['port43']:
                     log.debug("APNIC detected as responding RIR...")
@@ -119,7 +117,7 @@ class _RDAPIPEntity(_RDAPIPCommon):
                                 self.vars['entities'].append(c.vars)
                             except:
                                 log.debug("Additional IP contact information found but skipping it. Please report this with all debug logs as an issue for Throne.")
-                                pass
+
                 # Parse ARIN formatted data
                 if "arin" in self.json['port43']:
                     log.debug("ARIN detected as responding RIR...")
@@ -134,7 +132,7 @@ class _RDAPIPEntity(_RDAPIPCommon):
                                 self.vars['entities'].append(c.vars)
                             except:
                                 log.debug("Additional IP contact information found but skipping it. Please report this with all debug logs as an issue for Throne.")
-                            pass
+
                     log.debug("ARIN likes to be special and nest entities, attempting to parse those...")
                     for ent in self.json['entities'][0]['entities']:
                             try:
@@ -147,7 +145,7 @@ class _RDAPIPEntity(_RDAPIPCommon):
                                 self.vars['entities'].append(c.vars)
                             except:
                                 log.debug("Additional ARIN nested contact information found but skipping it. Please report this with all debug logs as an issue for Throne.")
-                                pass
+
                 # Parse AFRINIC formatted data
                 if "afrinic" in self.json['port43']:
                     log.debug("AFRINIC detected as responding RIR...")
@@ -162,7 +160,7 @@ class _RDAPIPEntity(_RDAPIPCommon):
                             self.vars['entities'].append(c.vars)
                         except:
                             log.debug("Additional IP contact information found but skipping it. Please report this with all debug logs as an issue for Throne.")
-                            pass
+
                 # Placeholder for future LACNIC data
             except:
                 log.debug("Cannot parse the vCardArry for entities, raising exception")

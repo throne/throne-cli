@@ -6,11 +6,10 @@ import logging
 import click
 import yaml
 import os
-from requests import request
 from pathlib import Path
 # Import Throne Modules
 from src.parsers import json_request, shodan_parser
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError, ThroneConfigError)
+from src.exceptions import ThroneFormattingError, ThroneConfigError
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
@@ -131,7 +130,7 @@ def dns(query_type, query, raw):
         for domain in query:
             query_list.append(domain)
             query = ','.join(query_list)
-        if query_type == None:
+        if query_type is None:
             click.secho("You must specify a --query-type/-q option! View 'throne shodan dns --help' for more information.", fg="red")
             exit()
         elif "reverse" in query_type:
@@ -336,7 +335,7 @@ def search(query, raw, all):
         click.echo(results)
     else:
         # Shared Variables
-        comma = ", "
+
         # Top-Level (TL) Variables
         domains = ', '.join((str(x) for x in results['domains']))
         hostnames = ', '.join((str(x) for x in results['hostnames']))

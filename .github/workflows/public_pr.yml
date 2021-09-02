@@ -32,6 +32,8 @@ jobs:
     - name: Test with pytest
       env:
         SHODAN_KEY: ${{ secrets.SHODAN_KEY }}
+        THRONE_USER: ${{ secrets.THRONE_USER }}
+        THRONE_PASS: ${{ secrets.THRONE_PASS }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
 
@@ -67,6 +69,8 @@ jobs:
     - name: Test with pytest
       env:
         SHODAN_KEY: ${{ secrets.SHODAN_KEY }}
+        THRONE_USER: ${{ secrets.THRONE_USER }}
+        THRONE_PASS: ${{ secrets.THRONE_PASS }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
 

@@ -27,7 +27,7 @@ except:
     pass
 
 # URLS
-THRONE_API = 'https://dev-api.throne.dev/'
+THRONE_API = 'https://api.throne.dev/'
 
 @click.group()
 def api():

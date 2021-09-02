@@ -23,8 +23,8 @@ except:
     throne_apikey = None
 
 # URLs
-#THRONE_API = "https://api.throne.dev/"
-THRONE_API = "https://dev-api.throne.dev/"
+THRONE_API = "https://api.throne.dev/"
+#THRONE_API = "https://dev-api.throne.dev/"
 
 @click.group()
 def whois():

@@ -32,7 +32,7 @@ except:
 THRONE_API = "http://10.0.3.18:8080/"
 BOOTSTRAP_URL = 'https://rdap-bootstrap.arin.net/bootstrap'
 RIPESTAT_ASOverview = 'https://stat.ripe.net/data/as-overview/data.json?resource='
-THRONE_API = 'https://dev-api.throne.dev/'
+THRONE_API = 'https://api.throne.dev/'
 
 @click.group()
 def bgp():

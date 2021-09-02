@@ -6,19 +6,20 @@ import logging
 import click
 import yaml
 import os
-from requests import request
+from pathlib import Path
 # Import Throne Modules
 from src.parsers import json_request, shodan_parser
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError, ThroneConfigError)
+from src.exceptions import ThroneFormattingError, ThroneConfigError
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
 
 # Get home directory
 home = os.path.expanduser("~")
+config_file = f'{home}/.throne/config.yml'
 
 try:
-    config = yaml.safe_load(open(f'{home}/.throne/config.yml'))
+    config = yaml.safe_load(open(config_file))
     shodan_apikey = config['shodan_key']
 except:
     pass
@@ -44,10 +45,16 @@ def setapi():
     try:
         if not os.path.exists(f"{home}/.throne"):
             os.makedirs(f"{home}/.throne")
+            Path(f'{home}/.throne/config.yml').touch()
         apikey_input = input("Enter Shodan API Key: ")
         shodan_apikey = {'shodan_key': f"{apikey_input}"}
-        with open(f"{home}/.throne/config.yml", 'w') as throne_config:
-            yaml.dump(shodan_apikey, throne_config)
+        with open(f"{home}/.throne/config.yml", 'r+') as throne_config:
+            if os.stat(config_file).st_size == 0:
+                yaml.safe_dump(shodan_apikey, throne_config)
+            else:
+                config = yaml.safe_load(throne_config)
+                config.update(shodan_apikey)
+                yaml.safe_dump(shodan_apikey, throne_config)
         click.secho("Successfully set Shodan API key.", fg="green")
     except:
         raise ThroneConfigError("Failed to set Shodan API key.")
@@ -123,7 +130,7 @@ def dns(query_type, query, raw):
         for domain in query:
             query_list.append(domain)
             query = ','.join(query_list)
-        if query_type == None:
+        if query_type is None:
             click.secho("You must specify a --query-type/-q option! View 'throne shodan dns --help' for more information.", fg="red")
             exit()
         elif "reverse" in query_type:
@@ -328,7 +335,7 @@ def search(query, raw, all):
         click.echo(results)
     else:
         # Shared Variables
-        comma = ", "
+
         # Top-Level (TL) Variables
         domains = ', '.join((str(x) for x in results['domains']))
         hostnames = ', '.join((str(x) for x in results['hostnames']))

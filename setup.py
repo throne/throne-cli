@@ -1,13 +1,13 @@
 import pathlib
-from setuptools import setup, find_packages
+from setuptools import setup
 
 parent_dir = pathlib.Path(__file__).parent
 README = (parent_dir / "README.md").read_text()
 
 setup(
     name='throne',
-    version='0.3.0',
-    author='shrunbr',
+    version='0.4.0',
+    author='throne:shrunbr',
     author_email='shrunbr@throne.dev',
     url='https://github.com/throne/throne-cli/',
     description='Watch the internet from up on your throne.',

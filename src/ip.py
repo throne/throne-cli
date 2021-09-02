@@ -104,7 +104,7 @@ def info(ctx, ipaddress, all):
     status = bootstrap_results['type']
     handle = bootstrap_results['handle']
     cidr = ripe_results['prefix']
-    if ripe_results['asns'] == None:
+    if ripe_results['asns'] is None:
         asnstr = "None"
     else:
         for asn in ripe_results['asns']:
@@ -124,7 +124,7 @@ def info(ctx, ipaddress, all):
         name = ent['name']
         kind = ent['roles']
         delimeter = "/"
-        if ent['roles'] == None:
+        if ent['roles'] is None:
             pass
         else:
             kind = delimeter.join(kind).title()
@@ -150,9 +150,8 @@ def info(ctx, ipaddress, all):
         else:
             click.echo(" Entity Address: " + streetAddress + "\n Entity Phone: " + phone + "\n Entity Email: " + email)
     if all:
-        if ripe_results['asns'] == None:
+        if ripe_results['asns'] is None:
             click.secho("\nThis prefix appears to not be advertised. There are no related ASNs to get BGP info for.", fg='red')
-            pass
         # Otherwise send ASNs to asn command in bgp.py
         else:
             for asn in ripe_results['asns']:

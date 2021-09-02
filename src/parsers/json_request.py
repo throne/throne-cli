@@ -8,7 +8,7 @@ import urllib3
 import sys
 import logging
 # Import Throne Modules
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
+from src.exceptions import ThroneHTTPError
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)

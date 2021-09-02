@@ -4,10 +4,9 @@
 # Import Third Party Modules
 import logging
 import click
-from requests import request
 # Import Throne Modules
 from src.parsers import json_request
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError)
+from src.exceptions import ThroneParsingError
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)

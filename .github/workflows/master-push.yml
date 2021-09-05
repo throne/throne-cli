@@ -23,7 +23,7 @@ jobs:
     - name: Install Flake8, pytest & throne (from source)
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        pip install flake8 pytest pytest-cov
         pip install .
     - name: Lint with flake8
       run: |
@@ -36,5 +36,11 @@ jobs:
         SHODAN_KEY: ${{ secrets.SHODAN_KEY }}
         THRONE_USER: ${{ secrets.THRONE_USER }}
         THRONE_PASS: ${{ secrets.THRONE_PASS }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
+        pytest --cov=./
+    - name: "Upload coverage to Codecov"
+      uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: true

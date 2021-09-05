@@ -37,6 +37,7 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
+        pytest --cov=./
     - name: "Upload coverage to Codecov"
       uses: codecov/codecov-action@v1
       with:

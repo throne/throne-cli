@@ -2,9 +2,13 @@
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com) 
 
-[![PyPI](https://img.shields.io/pypi/v/throne?color=gold&label=throne&style=for-the-badge)](https://www.throne.dev) ![Maintenance](https://img.shields.io/maintenance/yes/2022?style=for-the-badge) ![GitHub](https://img.shields.io/github/license/throne/throne-cli?style=for-the-badge)
+[![PyPI](https://img.shields.io/pypi/v/throne?color=gold&label=throne)](https://www.throne.dev) ![Maintenance](https://img.shields.io/maintenance/yes/2021) ![GitHub](https://img.shields.io/github/license/throne/throne-cli)
 
-[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/throne/throne-cli/Master%20Branch/master?label=Master%20Branch&style=for-the-badge)](https://github.com/throne/throne-cli/actions/workflows/master-push.yml) [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/throne/throne-cli/Development%20Branch/devel?label=Development%20Branch&style=for-the-badge)](https://github.com/throne/throne-cli/actions/workflows/dev-push.yml)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/throne/throne-cli/Master%20Branch/master?label=Master%20Branch) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/throne/throne-cli/Development%20Branch/devel?label=Development%20Branch)
+
+______
+
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/throne/throne-cli.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/throne/throne-cli/context:python) [![codecov](https://codecov.io/gh/throne/throne-cli/branch/master/graph/badge.svg?token=V4VPD1SMET)](https://codecov.io/gh/throne/throne-cli)
 
 ## [Read the full docs here!](https://www.throne.dev/docs/introduction)
 

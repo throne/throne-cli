@@ -34,6 +34,7 @@ jobs:
         SHODAN_KEY: ${{ secrets.SHODAN_KEY }}
         THRONE_USER: ${{ secrets.THRONE_USER }}
         THRONE_PASS: ${{ secrets.THRONE_PASS }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
     - name: "Upload coverage to Codecov"
@@ -75,6 +76,7 @@ jobs:
         SHODAN_KEY: ${{ secrets.SHODAN_KEY }}
         THRONE_USER: ${{ secrets.THRONE_USER }}
         THRONE_PASS: ${{ secrets.THRONE_PASS }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
     - name: "Upload coverage to Codecov"

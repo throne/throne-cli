@@ -36,6 +36,10 @@ jobs:
         THRONE_PASS: ${{ secrets.THRONE_PASS }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
+    - name: "Upload coverage to Codecov"
+      uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: true
 
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork:
@@ -73,6 +77,10 @@ jobs:
         THRONE_PASS: ${{ secrets.THRONE_PASS }}
       run: |
         pytest -s -v tests/create_config.py && pytest -s -v
+    - name: "Upload coverage to Codecov"
+      uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: true
 
     # Update check run called "integration-fork"
     - uses: actions/github-script@v1

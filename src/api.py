@@ -73,12 +73,7 @@ def setapi(username, password, scope):
             if "access_token" in k:
                 throne_apikey = {'throne_key': f"Bearer {json['access_token']}"}
                 with open(config_file, 'r+') as throne_config:
-                    if os.stat(config_file).st_size == 0:
-                        yaml.safe_dump(throne_apikey, throne_config)
-                    else:
-                        config = yaml.safe_load(throne_config)
-                        config.update(throne_apikey)
-                        yaml.safe_dump(throne_apikey, throne_config)
+                    yaml.safe_dump(throne_apikey, throne_config)
                 click.secho("Successfully set throne API key.", fg="green")
     except:
         raise

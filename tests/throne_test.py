@@ -116,9 +116,9 @@ def test_shodan_info():
     response = runner.invoke(throne, ["shodan", "info"])
     assert response.exit_code == 0
     assert "---Shodan API Info---" in response.output
-    assert "Total Scan Credits: 65536" in response.output
-    assert "Total Query Credits 200000" in response.output
-    assert "Monitored IP Limit: 131072" in response.output
+    assert "Total Scan Credits" in response.output
+    assert "Total Query Credits" in response.output
+    assert "Monitored IP Limit" in response.output
 
 def test_shodan_dns_resolve():
     print("Testing: throne shodan dns cloudflare.com google.com netflix.com reddit.com --query-type resolve")

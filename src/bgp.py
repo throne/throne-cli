@@ -7,10 +7,8 @@ import logging
 import os
 import yaml
 from requests import request
-from pathlib import Path
 # Import Throne Modules
 from src.parsers import json_request
-from src.parsers import rdap_asn_parser as asn_parser
 from src.parsers import lg_parser
 from src.exceptions import ThroneLookupFailed
 

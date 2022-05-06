@@ -24,7 +24,7 @@ except:
 
 # URLs
 THRONE_API = "https://api.throne.dev/"
-#THRONE_API = "https://dev-api.throne.dev/"
+#THRONE_API = "https://api-dev.throne.dev/"
 
 @click.group()
 def whois():

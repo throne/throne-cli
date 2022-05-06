@@ -2,7 +2,7 @@
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com) 
 
-[![PyPI](https://img.shields.io/pypi/v/throne?color=gold&label=throne)](https://www.throne.dev) ![Maintenance](https://img.shields.io/maintenance/yes/2021) ![GitHub](https://img.shields.io/github/license/throne/throne-cli)
+[![PyPI](https://img.shields.io/pypi/v/throne?color=gold&label=throne)](https://www.throne.dev) ![Maintenance](https://img.shields.io/maintenance/yes/2022) ![GitHub](https://img.shields.io/github/license/throne/throne-cli)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/throne/throne-cli/Master%20Branch/master?label=Master%20Branch) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/throne/throne-cli/Development%20Branch/devel?label=Development%20Branch)
 

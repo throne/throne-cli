@@ -9,9 +9,6 @@ import os
 from requests import request
 from pathlib import Path
 from getpass import getpass
-# Import Throne Modules
-from src.parsers import json_request, shodan_parser
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError, ThroneConfigError)
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)

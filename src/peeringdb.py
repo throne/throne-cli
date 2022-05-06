@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 # URL Variables
 PDB_ORG_ASN = "https://www.peeringdb.com/api/org?asn="
 PDB_IX_NAME = "https://www.peeringdb.com/api/ix?name_search="
+PDB_FAC_NAME = "https://www.peeringdb.com/api/fac?name_search="
 
 @click.group()
 def pdb():
@@ -94,3 +95,31 @@ def ix(ix, unformatted, count):
                 # Print output
                 click.secho(f"--{ix['name']}--", fg="blue")
                 click.echo(f"Name: {ix['name_long']}\nLocation: {location}\nMedia Type: {ix['media']}\nSupported Protocol Types: {protocols}\nTech Contact: {tech_contact}\nPolicy Contact: {policy_contact}\nTotal Networks: {ix['net_count']}\nTraffic Stats: {ix['url_stats']}")
+
+@pdb.command()
+@click.option("--unformatted", "-u", is_flag=True, help="Returns output unformatted.", default=False)
+@click.option("--count", "-c", help="Changes the number of results returned.", default=3, show_default=3, metavar="NUMBER")
+@click.argument('fac', nargs=1, metavar="FACILITY")
+def fac(fac, unformatted, count):
+    """
+    Returns facility search output from PeeringDB.
+    """
+    url = "{0}{1}&limit={2}".format(PDB_FAC_NAME, fac, count)
+    json = json_request._JSONRequest().get_json(url=url)
+    click.echo(json)
+    if json['data'] == []:
+        raise ThroneParsingError(f"PeeringDB returned a blank result. Please check your query and try again. If the issue persists, manually query PeeringDB to see if the entry exists.\nJSON Returned: {json}")
+    else:
+        click.secho("---PeeringDB Results---", fg="green")
+        if unformatted:
+            for fac in json['data']:
+                click.secho(f"--{fac['name']}--", fg="blue")
+                for k,v in fac.items():
+                    k = k.capitalize()
+                    click.secho(f"{k}: {v}")
+        else:
+            for fac in json['data']:
+                # Variables
+                fac_location = f"{fac['city']}, {fac['state']}, {fac['country']}, {fac['region_continent']}"
+                click.secho(f"--{fac['name']}--", fg="blue")
+                click.echo(f"Name: {fac['name']}\nOrganization: {fac['org_name']}\nLocation: {fac_location}\n Latitude: {fac['latitude']}\n Longitude: {fac['longitude']}\nIX Count: {fac['ix_count']}\nNetwork Count: {fac['net_count']}")

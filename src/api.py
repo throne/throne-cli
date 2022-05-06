@@ -57,7 +57,7 @@ def setapi(username, password, scope):
             os.makedirs(f"{home}/.throne")
             Path(f'{home}/.throne/config.yml').touch()
         url = "{0}auth/login".format(THRONE_API)
-        if scope == None:
+        if scope is None:
             payload = f"username={username}&password={password}"
         else:
             payload = f"username={username}&password={password}&scope={scope}"

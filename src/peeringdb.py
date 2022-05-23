@@ -106,7 +106,6 @@ def fac(fac, unformatted, count):
     """
     url = "{0}{1}&limit={2}".format(PDB_FAC_NAME, fac, count)
     json = json_request._JSONRequest().get_json(url=url)
-    click.echo(json)
     if json['data'] == []:
         raise ThroneParsingError(f"PeeringDB returned a blank result. Please check your query and try again. If the issue persists, manually query PeeringDB to see if the entry exists.\nJSON Returned: {json}")
     else:

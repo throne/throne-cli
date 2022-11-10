@@ -168,6 +168,5 @@ def test_shodan_dns_domain():
     assert response.exit_code == 0
     assert "---Shodan DNS Results---" in response.output
     assert "Domain: discord.com" in response.output
-    assert "A Records:" in response.output
-    assert "MX Records:" in response.output
-    assert "NS Records:" in response.output
+    assert "Shodan Tags:" in response.output
+    assert "Subdomains:" in response.output

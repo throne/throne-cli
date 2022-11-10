@@ -9,9 +9,6 @@ import os
 from requests import request
 from pathlib import Path
 from getpass import getpass
-# Import Throne Modules
-from src.parsers import json_request, shodan_parser
-from src.exceptions import (ThroneParsingError, ThroneFormattingError, ThroneLookupFailed, ThroneHTTPError, ThroneConfigError)
 
 # Set log variable for verbose output
 log = logging.getLogger(__name__)
@@ -40,7 +37,7 @@ def api():
 @click.option('--password', '-p', default=None, help="[OPTIONAL] Sets password")
 @click.option('--scope', '-s', default=None, help="[OPTIONAL] Sets scope")
 @api.command()
-def setapi(username, password, scope):
+def set(username, password, scope):
     """
     Use this command to login to the throne API and set your API key
     """
@@ -60,7 +57,7 @@ def setapi(username, password, scope):
             os.makedirs(f"{home}/.throne")
             Path(f'{home}/.throne/config.yml').touch()
         url = "{0}auth/login".format(THRONE_API)
-        if scope == None:
+        if scope is None:
             payload = f"username={username}&password={password}"
         else:
             payload = f"username={username}&password={password}&scope={scope}"
@@ -72,8 +69,27 @@ def setapi(username, password, scope):
                 click.secho(f"Unable to authenticate. Error: {json['error']} - Reason: {json['error_description']}", fg="red")
             if "access_token" in k:
                 throne_apikey = {'throne_key': f"Bearer {json['access_token']}"}
-                with open(config_file, 'r+') as throne_config:
+                throne_username = {'throne_username': f"{username}"}
+                with open(config_file, 'w+') as throne_config:
+                    yaml.safe_dump(throne_username, throne_config)
                     yaml.safe_dump(throne_apikey, throne_config)
                 click.secho("Successfully set throne API key.", fg="green")
+    except:
+        raise
+
+@api.command()
+def get():
+    """
+    Use this command to get your username to the throne API.
+    """
+    try:
+        config = yaml.safe_load(open(config_file))
+        username = config['throne_username']
+        if username != "":
+            print(username)
+        else:
+            print("No username is set.")
+    except FileNotFoundError:
+        print("A config file could not be found. Please run throne api set to create it.")
     except:
         raise

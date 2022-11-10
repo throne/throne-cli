@@ -7,10 +7,8 @@ import logging
 import os
 import yaml
 from requests import request
-from pathlib import Path
 # Import Throne Modules
 from src.parsers import json_request
-from src.parsers import rdap_asn_parser as asn_parser
 from src.parsers import lg_parser
 from src.exceptions import ThroneLookupFailed
 
@@ -97,7 +95,7 @@ def asn(as_number):
                     click.echo(" Entity Address: " + address + "\n Entity Phone: " + phone + "\n Entity Email: " + email)
         except:
             raise ThroneLookupFailed("Failed to get additional RIR data.")
-    if throne_apikey == None:
+    if throne_apikey is None:
         click.secho("throne API key required! Run `throne api setapi` to configure your API key.", fg="red")
         click.secho("If you do not have an account, please register for one by visting https://api.throne.dev/auth/login and click 'Sign Up' at the bottom of the prompt", fg="red")
 

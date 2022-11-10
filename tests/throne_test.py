@@ -111,6 +111,28 @@ def test_pdbix_AMSIX_10():
     assert "Chicago, US" in response.output
     assert "Mumbai, IN" in response.output
 
+def test_pdbfac_Cologix():
+    print("Testing throne pdb fac Cologix")
+    response = runner.invoke(throne, ["pdb", "fac", "Cologix"])
+    assert response.exit_code == 0
+    assert "---PeeringDB Results---" in response.output
+    assert "Cologix" in response.output
+    assert "Toronto" in response.output
+    assert "Minneapolis" in response.output
+    assert "Vancouver" in response.output
+
+def test_pdbfac_Cologix_10():
+    print("Testing throne pdb fac Cologix -c 10")
+    response = runner.invoke(throne, ["pdb", "fac", "Cologix", "-c", "10"])
+    assert response.exit_code == 0
+    assert "---PeeringDB Results---" in response.output
+    assert "Cologix" in response.output
+    assert "Toronto" in response.output
+    assert "Minneapolis" in response.output
+    assert "Vancouver" in response.output
+    assert "Montreal" in response.output
+    assert "Jacksonville" in response.output
+
 def test_shodan_info():
     print("Testing: throne shodan info")
     response = runner.invoke(throne, ["shodan", "info"])
@@ -146,6 +168,5 @@ def test_shodan_dns_domain():
     assert response.exit_code == 0
     assert "---Shodan DNS Results---" in response.output
     assert "Domain: discord.com" in response.output
-    assert "A Records:" in response.output
-    assert "MX Records:" in response.output
-    assert "NS Records:" in response.output
+    assert "Shodan Tags:" in response.output
+    assert "Subdomains:" in response.output

@@ -96,7 +96,7 @@ def asn(as_number):
         except:
             raise ThroneLookupFailed("Failed to get additional RIR data.")
     if throne_apikey is None:
-        click.secho("throne API key required! Run `throne api setapi` to configure your API key.", fg="red")
+        click.secho("throne API key required! Run `throne api set` to configure your API key.", fg="red")
         click.secho("If you do not have an account, please register for one by visting https://api.throne.dev/auth/login and click 'Sign Up' at the bottom of the prompt", fg="red")
 
 @bgp.command()

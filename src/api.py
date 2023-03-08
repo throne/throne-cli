@@ -14,7 +14,7 @@ from getpass import getpass
 log = logging.getLogger(__name__)
 
 # Get home directory
-home = os.path.expanduser("~")
+home = os.environ['HOME']
 config_file = f'{home}/.throne/config.yml'
 
 try:
@@ -41,17 +41,20 @@ def set(username, password, scope):
     """
     Use this command to login to the throne API and set your API key
     """
-    if username is None:
-        username = input("Username: ")
-        password = getpass("Password: ")
-        set_scope = input("Do you wish to set a scope? (Y/N): ")
-        if set_scope == "y" or set_scope == "Y":
-            scope = input("Scope: ")
-        elif set_scope == "n" or set_scope == "N":
-            scope = None
-        else:
-            print("Invalid Option. Please select Y or N.")
-            exit()
+    try:
+        if username is None:
+            username = input("Username: ")
+            password = getpass("Password: ")
+            set_scope = input("Do you wish to set a scope? (Y/N): ")
+            if set_scope == "y" or set_scope == "Y":
+                scope = input("Scope: ")
+            elif set_scope == "n" or set_scope == "N":
+                scope = None
+            else:
+                print("Invalid Option. Please select Y or N.")
+                exit()
+    except:
+        raise
     try:
         if not os.path.exists(f"{home}/.throne"):
             os.makedirs(f"{home}/.throne")
@@ -70,7 +73,7 @@ def set(username, password, scope):
             if "access_token" in k:
                 throne_apikey = {'throne_key': f"Bearer {json['access_token']}"}
                 throne_username = {'throne_username': f"{username}"}
-                with open(config_file, 'w+') as throne_config:
+                with open(config_file, 'r+') as throne_config:
                     yaml.safe_dump(throne_username, throne_config)
                     yaml.safe_dump(throne_apikey, throne_config)
                 click.secho("Successfully set throne API key.", fg="green")

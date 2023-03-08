@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 BOOTSTRAP_URL = 'https://rdap-bootstrap.arin.net/bootstrap'
 RIPENETINFO_URL = 'https://stat.ripe.net/data/network-info/data.json?resource='
 RIPEPREFIXOVER_URL = 'https://stat.ripe.net/data/prefix-overview/data.json?resource='
-MACADDRESS_URL = 'https://www.macvendors.co/api/'
+MACADDRESS_URL = 'https://api.macvendors.com/'
 
 @click.group()
 def ip():
@@ -159,19 +159,3 @@ def info(ctx, ipaddress, all):
                 ctx.invoke(get_asn, as_number=asnstr)
     else:
         pass
-
-@ip.command()
-@click.option('--raw', '-r', is_flag=True)
-@click.argument('address', nargs=1, metavar="MAC_ADDRESS")
-def mac(address, raw):
-    """
-    Retrieves geolocation information for a specified IP address.
-    """
-    url = '{0}{1}'.format(MACADDRESS_URL, address)
-    results = json_request._JSONRequest().get_json(url=url)
-    if raw:
-        click.echo(results)
-    else:
-        click.secho(f"---{address} Results---", fg="yellow")
-        for results in results.values():
-            click.echo(f"Company: {results['company']}\nAddress: {results['address']}\nMAC Prefix: {results['mac_prefix']}\nHEX Start: {results['start_hex']}\nHEX End: {results['end_hex']}\nCountry: {results['country']}\nType: {results['type']}")

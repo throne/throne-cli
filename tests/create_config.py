@@ -6,9 +6,10 @@ from bin.throne import cli as throne
 runner = CliRunner()
 
 shodan_key = os.environ['SHODAN_KEY']
-throne_user = os.environ['THRONE_USER']
-throne_pass = os.environ['THRONE_PASS']
-
+#throne_user = os.environ['THRONE_USER']
+#throne_pass = os.environ['THRONE_PASS']
+throne_user = "testuser@throne.dev"
+throne_pass = "VlWaurxSX3mWAFctaSWH"
 def test_throne_setapi():
     print("Testing: throne api set")
     response = runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])

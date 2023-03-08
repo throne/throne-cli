@@ -181,5 +181,5 @@ def domain(domain):
         except:
             pass
     if throne_apikey is None:
-        click.secho("throne API key required! Run `throne api setapi` to configure your API key.", fg="red")
+        click.secho("throne API key required! Run `throne api set` to configure your API key.", fg="red")
         click.secho("If you do not have an account, please register for one by visting https://api.throne.dev/auth/login and click 'Sign Up' at the bottom of the prompt", fg="red")

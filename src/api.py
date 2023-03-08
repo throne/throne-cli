@@ -14,7 +14,7 @@ from getpass import getpass
 log = logging.getLogger(__name__)
 
 # Get home directory
-home = os.path.expanduser("~")
+home = os.environ['HOME']
 config_file = f'{home}/.throne/config.yml'
 
 try:

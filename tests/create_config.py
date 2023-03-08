@@ -5,9 +5,9 @@ from bin.throne import cli as throne
 
 runner = CliRunner()
 
-shodan_key = os.getenv('SHODAN_KEY')
-throne_user = os.getenv('THRONE_USER')
-throne_pass = os.getenv('THRONE_PASS')
+shodan_key = os.environ['SHODAN_KEY']
+throne_user = os.environ['THRONE_USER']
+throne_pass = os.environ['THRONE_PASS']
 
 def test_throne_setapi():
     print("Testing: throne api set")

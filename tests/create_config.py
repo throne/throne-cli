@@ -11,9 +11,7 @@ throne_pass = os.getenv('THRONE_PASS')
 
 def test_throne_setapi():
     print("Testing: throne api set")
-    print(throne_user)
     response = runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
-    print(response.output)
     assert response.exit_code == 0
     assert "Successfully set throne API key." in response.output
 

@@ -70,7 +70,7 @@ def set(username, password, scope):
             if "access_token" in k:
                 throne_apikey = {'throne_key': f"Bearer {json['access_token']}"}
                 throne_username = {'throne_username': f"{username}"}
-                with open(config_file, 'w+') as throne_config:
+                with open(config_file, 'r+') as throne_config:
                     yaml.safe_dump(throne_username, throne_config)
                     yaml.safe_dump(throne_apikey, throne_config)
                 click.secho("Successfully set throne API key.", fg="green")

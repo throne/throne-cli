@@ -39,4 +39,5 @@ def test_shodan_setapi():
     assert test == True
 
 test_throne_setapi()
+test_shodan_setapi()
 get_config_output()

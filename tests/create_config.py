@@ -22,7 +22,8 @@ def test_shodan_setapi():
 
 def test_throne_setapi():
     print("Testing: throne api set")
-    runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
+    response = runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
+    print(response.output)
     #response = runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
     #if "Successfully" in response.output:
     #    test = True
@@ -36,9 +37,9 @@ def get_config_output():
     config_file = f'{home}/.throne/config.yml'
     config = yaml.safe_load(open(config_file))
     print(config)
-    sys.stdout.write("This is a test, FIND ME")
+    sys.stdout.write("This is a test, FIND ME\n")
 
-test_shodan_setapi()
-get_config_output()
 test_throne_setapi()
+get_config_output()
+test_shodan_setapi()
 get_config_output()

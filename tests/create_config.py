@@ -1,6 +1,7 @@
 import os
 import time
 import yaml
+import sys
 from click.testing import CliRunner
 from bin.throne import cli as throne
 
@@ -24,6 +25,7 @@ def get_config_output():
     config_file = f'{home}/.throne/config.yml'
     config = yaml.safe_load(open(config_file))
     print(config)
+    sys.stdout.write("This is a test, FIND ME")
 
 def test_shodan_setapi():
     print("Testing: throne shodan setapi")

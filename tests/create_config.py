@@ -11,6 +11,15 @@ shodan_key = os.environ['SHODAN_KEY']
 throne_user = os.environ['THRONE_USER']
 throne_pass = os.environ['THRONE_PASS']
 
+def test_shodan_setapi():
+    print("Testing: throne shodan setapi")
+    response = runner.invoke(throne, ["shodan", "setapi"], input=f"{shodan_key}")
+    if "Successfully" in response.output:
+        test = True
+    else:
+        test = False
+    assert test == True
+
 def test_throne_setapi():
     print("Testing: throne api set")
     runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
@@ -29,15 +38,7 @@ def get_config_output():
     print(config)
     sys.stdout.write("This is a test, FIND ME")
 
-def test_shodan_setapi():
-    print("Testing: throne shodan setapi")
-    response = runner.invoke(throne, ["shodan", "setapi"], input=f"{shodan_key}")
-    if "Successfully" in response.output:
-        test = True
-    else:
-        test = False
-    assert test == True
-
-test_throne_setapi()
 test_shodan_setapi()
+get_config_output()
+test_throne_setapi()
 get_config_output()

@@ -1,45 +1,22 @@
 import os
 import time
-import yaml
-import sys
 from click.testing import CliRunner
 from bin.throne import cli as throne
 
 runner = CliRunner()
 
-shodan_key = os.environ['SHODAN_KEY']
-throne_user = os.environ['THRONE_USER']
-throne_pass = os.environ['THRONE_PASS']
+shodan_key = os.getenv('SHODAN_KEY')
+throne_user = os.getenv('THRONE_USER')
+throne_pass = os.getenv('THRONE_PASS')
+
+def test_throne_setapi():
+    print("Testing: throne api set")
+    response = runner.invoke(throne, ["api", "set", "-u", f"{throne_user}", "-p", f"{throne_pass}"])
+    assert response.exit_code == 0
+    assert "Successfully set throne API key." in response.output
 
 def test_shodan_setapi():
     print("Testing: throne shodan setapi")
     response = runner.invoke(throne, ["shodan", "setapi"], input=f"{shodan_key}")
-    if "Successfully" in response.output:
-        test = True
-    else:
-        test = False
-    assert test == True
-
-def test_throne_setapi():
-    print("Testing: throne api set")
-    response = runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
-    print(response.output)
-    #response = runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
-    #if "Successfully" in response.output:
-    #    test = True
-    #else:
-    #    test = False
-    #assert test == True
-    #print(response.output)
-
-def get_config_output():
-    home = os.environ['HOME']
-    config_file = f'{home}/.throne/config.yml'
-    config = yaml.safe_load(open(config_file))
-    print(config)
-    sys.stdout.write("This is a test, FIND ME\n")
-
-test_throne_setapi()
-get_config_output()
-test_shodan_setapi()
-get_config_output()
+    assert response.exit_code == 0
+    assert "Successfully set Shodan API key." in response.output

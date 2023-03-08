@@ -42,9 +42,8 @@ jobs:
         THRONE_PASS: ${{ secrets.THRONE_PASS }}
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        pytest -s -vvvv tests/create_config.py && pytest -s -vvvv
+        pytest -s -vvvv tests/create_config.py && pytest -s -vvvv && cat $HOME/.throne/config.yml
         pytest --cov=./
-        cat $HOME/.throne/config.yml
     - name: "Upload coverage to Codecov"
       uses: codecov/codecov-action@v1
       with:

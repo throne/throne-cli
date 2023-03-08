@@ -35,3 +35,6 @@ def test_shodan_setapi():
     else:
         test = False
     assert test == True
+
+test_throne_setapi()
+get_config_output()

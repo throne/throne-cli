@@ -13,13 +13,14 @@ throne_pass = os.environ['THRONE_PASS']
 
 def test_throne_setapi():
     print("Testing: throne api set")
-    response = runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
+    runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
+    #response = runner.invoke(throne, ["api", "set", "-u", throne_user, "-p", throne_pass])
     #if "Successfully" in response.output:
     #    test = True
     #else:
     #    test = False
     #assert test == True
-    print(response.output)
+    #print(response.output)
 
 def get_config_output():
     home = os.environ['HOME']

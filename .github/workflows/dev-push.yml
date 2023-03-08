@@ -44,7 +44,7 @@ jobs:
       run: |
         # pytest -s -vvvv tests/create_config.py && pytest -s -vvvv
         # pytest --cov=./
-        python3 tests/create_config.py
+        python tests/create_config.py
     - name: "Upload coverage to Codecov"
       uses: codecov/codecov-action@v1
       with:

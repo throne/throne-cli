@@ -8,8 +8,6 @@ import os
 import yaml
 from requests import request
 # Import Throne Modules
-from src.parsers import json_request
-from src.parsers import rdap_ip_parser as ip_parser
 from src.bgp import asn as get_asn
 
 # Set log variable for verbose output
@@ -45,13 +43,11 @@ def raw(address):
     This command prints raw JSON information for IP addresses. \n
     This raw output does NOT contain BGP related information.
     """
-    url = '{0}/ip/{1}'.format(BOOTSTRAP_URL, address)
-    response = json_request._JSONRequest().get_json(url=url)
-    json = response
-    parse_json = ip_parser._RDAPIPEntity(json)
-    parse_json.parse()
-    results = parse_json.vars
-    print(results)
+    throne_url = '{0}whois/ip?query={1}'.format(THRONE_API, address)
+    throne_headers = {'Authorization': f'{throne_apikey}'}
+    throne_response = request("GET", throne_url, headers=throne_headers)
+    throne_result = throne_response.json()
+    print(throne_result)
 
 @ip.command()
 @click.argument('address', nargs=1, metavar="IP_ADDRESS")

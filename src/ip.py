@@ -121,7 +121,7 @@ def info(ctx, ipaddress, all):
                 click.echo(" Entity Address: " + ent['address'] + "\n Entity Phone: " + str(ent['phone']) + "\n Entity Email: " + ent['email'])
                 click.secho("\nSome of these details may be filtered by RIPE. To verify this information please visit https://apps.db.ripe.net/db-web-ui/query.", fg='red')
             else:
-                click.echo(" Entity Address: " + ent['address'] + "\n Entity Phone: " + str(ent['phone']) + "\n Entity Email: " + ent['email'])
+                click.echo(" Entity Address: " + ent['address'] + "\n Entity Phone: " + str(ent['phone']) + "\n Entity Email: " + str(ent['email']))
         if all:
             if ripe_result['data']['asns'] is None:
                 click.secho("\nThis prefix appears to not be advertised. There are no related ASNs to get BGP info for.", fg='red')

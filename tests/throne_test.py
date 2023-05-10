@@ -16,18 +16,19 @@ def test_ipinfo():
     print("Testing: throne ip info 1.1.1.1")
     response = runner.invoke(throne, ["ip", "info", "1.1.1.1"])
     assert response.exit_code == 0
-    assert "CIDR: 1.1.1.0/24" in response.output
-    assert "---APNIC/1.1.1.0 - 1.1.1.255 Contact Information---" in response.output
+    assert "RIR: APNIC" in response.output
+    assert "---APNIC/CLOUDFLARENET Contact Information---" in response.output
 
 def test_ipinfo_all():
     print("Testing: throne ip info 1.1.1.1 --all")
     response = runner.invoke(throne, ["ip", "info", "1.1.1.1", "--all"])
     assert response.exit_code == 0
-    assert "CIDR: 1.1.1.0/24" in response.output
-    assert "---APNIC/1.1.1.0 - 1.1.1.255 Contact Information---" in response.output
+    assert "RIR: APNIC" in response.output
+    assert "---APNIC/CLOUDFLARENET Contact Information---" in response.output
     assert "---Basic ASN Info--" in response.output
     assert "Holder: CLOUDFLARENET" in response.output
-    assert "Entity Address: 101 Townsend Street San Francisco CA 94107 United States" in response.output
+    assert "Cloudflare, Inc. (Registrant)" in response.output
+    assert "Entity Email: noc@cloudflare.com" in response.output
 
 def test_bgpasn():
     print("Testing: throne bgp asn 59")

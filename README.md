@@ -1,3 +1,7 @@
+# THIS PROJECT IS NO LONGER MAINTAINED AND HAS BEEN ARCHIVED AS OF JANUARY 29TH, 2025.
+
+---
+
 # throne-cli
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com) 
